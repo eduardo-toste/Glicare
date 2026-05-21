@@ -1,0 +1,21 @@
+services:
+  glicare-db:
+    image: postgres:16
+    container_name: glicare-db
+    environment:
+      POSTGRES_DB: ${GLICARE_DB}
+      POSTGRES_USER: ${GLICARE_DB_USER}
+      POSTGRES_PASSWORD: ${GLICARE_DB_PASSWORD}
+    ports:
+      - "${GLICARE_DB_PORT}:5432"
+    volumes:
+      - glicare_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${GLICARE_DB_USER} -d ${GLICARE_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  glicare_db_data:
